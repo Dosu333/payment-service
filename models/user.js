@@ -25,7 +25,10 @@ const userSchema = mongoose.Schema({
     isActive: {
         type: Boolean,
         default: true
-    }
+    },
+    lastLogin: {
+        type: Date
+    } 
 })
 
 userSchema.virtual('id').get(function () {

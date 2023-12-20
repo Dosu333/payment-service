@@ -18,9 +18,11 @@ app.use(morgan('tiny'));
 
 // Routes
 const userRoutes = require('./routers/user')
+const authRoutes = require('./routers/auth')
 
 
 app.use(`${api}/user`, userRoutes)
+app.use(`${api}/auth`, authRoutes)
 
 
 // Database Configuration
