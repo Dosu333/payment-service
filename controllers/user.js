@@ -73,8 +73,26 @@ const adminUpdateUser = async (req, res) => {
   }
 }
 
+const updateUser = async (req, res) => {
+  try {
+    await User.findByIdAndUpdate(req.user.id, {
+      fullname: req.body.fullname,
+      phone: req.body.phone
+    })
+    const user = await User.findById(req.user.id).select('-password')
+    return res.status(200).send(user)
+  } catch(error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({
+      success: false,
+      error: "Internal Server Error",
+    });
+  }
+}
+
 module.exports = {
   listUsers,
   createUser,
-  adminUpdateUser
+  adminUpdateUser,
+  updateUser
 };
