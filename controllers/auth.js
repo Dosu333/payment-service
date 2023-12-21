@@ -70,8 +70,7 @@ const getNewAccessToken = async (req, res) => {
       expiresIn: "1h",
     });
 
-    user.lastLogin = new Date();
-    user.save();
+    User.findByIdAndUpdate(user.id, { lastLogin: new Date() })
 
     return res.status(200).json({
       success: true,
