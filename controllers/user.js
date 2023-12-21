@@ -92,6 +92,7 @@ const updateUser = async (req, res) => {
   }
 }
 
+// Admin delete user
 const adminDeleteUser = async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.id)
