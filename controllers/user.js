@@ -42,7 +42,8 @@ const createUser = async (req, res) => {
       });
     }
     user.save();
-    return res.status(201).send(user);
+    const newUser = await User.findById(user.id).select('-password')
+    return res.status(201).send(newUser);
   } catch (error) {
     console.error("Error fetching users:", error);
     res.status(500).json({
@@ -73,6 +74,7 @@ const adminUpdateUser = async (req, res) => {
   }
 }
 
+// Regular update user
 const updateUser = async (req, res) => {
   try {
     await User.findByIdAndUpdate(req.user.id, {
@@ -90,9 +92,23 @@ const updateUser = async (req, res) => {
   }
 }
 
+const adminDeleteUser = async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.params.id)
+    return res.status(204).send('')
+  } catch(error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({
+      success: false,
+      error: "Internal Server Error",
+    });
+  }
+}
+
 module.exports = {
   listUsers,
   createUser,
   adminUpdateUser,
-  updateUser
+  updateUser,
+  adminDeleteUser
 };
