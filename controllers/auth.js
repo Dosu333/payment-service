@@ -22,6 +22,21 @@ const userLogin = async (req, res) => {
     const refreshSecret = process.env.REFRESH_JWT_SECRET;
 
     if (user && bcrypt.compareSync(req.body.password, user.password)) {
+
+      if(!user.isVerified) {
+        return res.status(403).json({
+          success: false,
+          error: "this account is unverified. please verify it"
+        })
+      }
+
+      if(!user.isActive) {
+        return res.status(403).json({
+          success: false,
+          error: "this account is inactive. please reach out to support"
+        })
+      }
+
       user.lastLogin = new Date();
       user.save();
       const accessToken = jwt.sign(tokenClaims, accessSecret, {
@@ -70,7 +85,7 @@ const getNewAccessToken = async (req, res) => {
       expiresIn: "1h",
     });
 
-    User.findByIdAndUpdate(user.id, { lastLogin: new Date() })
+    await User.findByIdAndUpdate(user.id, { lastLogin: new Date() })
 
     return res.status(200).json({
       success: true,
