@@ -16,7 +16,12 @@ const subscriptionSchema = mongoose.Schema({
     },
     firstTimeUserDiscount: {
         type: Number,
-        required: false
+        required: false,
+        default: 0
+    },
+    dateAdded: {
+        type: Date,
+        default: Date.now
     }
 })
 

@@ -1,7 +1,7 @@
 const userController = require("../controllers/user");
 const express = require("express");
 const isAuthenticated = require("../middleware/IsAuthenticated");
-const isAdmin = require("../middleware/isAdmin");
+const isAdmin = require("../middleware/IsAdmin");
 const router = express.Router();
 
 router.get("/", isAuthenticated, isAdmin, userController.listUsers); // List all users

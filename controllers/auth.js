@@ -37,7 +37,7 @@ const userLogin = async (req, res) => {
         })
       }
 
-      user.lastLogin = new Date();
+      user.lastLogin = Date.now();
       user.save();
       const accessToken = jwt.sign(tokenClaims, accessSecret, {
         expiresIn: "1h",
@@ -85,7 +85,7 @@ const getNewAccessToken = async (req, res) => {
       expiresIn: "1h",
     });
 
-    await User.findByIdAndUpdate(user.id, { lastLogin: new Date() })
+    await User.findByIdAndUpdate(user.id, { lastLogin: Date.now() })
 
     return res.status(200).json({
       success: true,
