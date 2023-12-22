@@ -11,6 +11,18 @@ router.post(
   isAdmin,
   subscriptionController.createSubscription
 ); // Create subscription
+router.get(
+  "/:id",
+  isAuthenticated,
+  isAdmin,
+  subscriptionController.subscriptionDetail
+); // Retrieve subscription
+router.put(
+  "/:id",
+  isAuthenticated,
+  isAdmin,
+  subscriptionController.updateSubscription
+); // Update subscription
 router.delete(
   "/:id",
   isAuthenticated,

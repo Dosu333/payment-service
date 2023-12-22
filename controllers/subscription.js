@@ -51,22 +51,58 @@ const createSubscription = async (req, res) => {
   }
 };
 
+// Admin retrieve subscription
+const subscriptionDetail = async (req, res) => {
+  try {
+    const subscription = await Subscription.findById(req.params.id);
+    return res.status(200).send(subscription);
+  } catch (error) {
+    console.error("Error fetching subscription:", error);
+    res.status(500).json({
+      success: false,
+      error: "Internal Server Error",
+    });
+  }
+};
+
+// Admin upadate subscription
+const updateSubscription = async (req, res) => {
+  try {
+    await Subscription.findByIdAndUpdate(req.params.id, {
+      name: req.body.name,
+      price: req.body.price,
+      durationInDays: req.body.durationInDays,
+      firstTimeUserDiscount: req.body.firstTimeUserDiscount,
+    });
+    const subscription = await Subscription.findById(req.params.id);
+    return res.status(200).send(subscription);
+  } catch (error) {
+    console.error("Error updating subscription:", error);
+    res.status(500).json({
+      success: false,
+      error: "Internal Server Error",
+    });
+  }
+};
+
 // Admin delete subscription
 const deleteSubscription = async (req, res) => {
-    try {
-      await Subscription.findByIdAndDelete(req.params.id);
-      return res.status(204).send("");
-    } catch (error) {
-      console.error("Error deleting subscription:", error);
-      res.status(500).json({
-        success: false,
-        error: "Internal Server Error",
-      });
-    }
-  };
+  try {
+    await Subscription.findByIdAndDelete(req.params.id);
+    return res.status(204).send("");
+  } catch (error) {
+    console.error("Error deleting subscription:", error);
+    res.status(500).json({
+      success: false,
+      error: "Internal Server Error",
+    });
+  }
+};
 
 module.exports = {
   listSubscriptions,
   createSubscription,
-  deleteSubscription
+  deleteSubscription,
+  subscriptionDetail,
+  updateSubscription,
 };
