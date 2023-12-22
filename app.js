@@ -19,10 +19,11 @@ app.use(morgan('tiny'));
 // Routes
 const userRoutes = require('./routers/user')
 const authRoutes = require('./routers/auth')
-
+const subscriptionRoutes = require('./routers/subscription')
 
 app.use(`${api}/user`, userRoutes)
 app.use(`${api}/auth`, authRoutes)
+app.use(`${api}/subscription`, subscriptionRoutes)
 
 
 // Database Configuration
