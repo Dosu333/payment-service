@@ -19,6 +19,10 @@ const subscriptionSchema = mongoose.Schema({
         required: false,
         default: 0
     },
+    currency: {
+        type: String,
+        default: "NGN"
+    },
     dateAdded: {
         type: Date,
         default: Date.now

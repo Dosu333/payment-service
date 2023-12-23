@@ -20,10 +20,14 @@ app.use(morgan('tiny'));
 const userRoutes = require('./routers/user')
 const authRoutes = require('./routers/auth')
 const subscriptionRoutes = require('./routers/subscription')
+const paidSubscriptionRoutes = require('./routers/paidSubscription')
+const webhookRoute = require('./routers/webhook')
 
 app.use(`${api}/user`, userRoutes)
 app.use(`${api}/auth`, authRoutes)
 app.use(`${api}/subscription`, subscriptionRoutes)
+app.use(`${api}/subscribe`, paidSubscriptionRoutes)
+app.use(`${api}/webhook`, webhookRoute)
 
 
 // Database Configuration
