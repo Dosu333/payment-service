@@ -1,5 +1,6 @@
 const { PaidSubscription } = require("../models/paidSubscription");
 const { Subscription } = require("../models/subscription");
+require('dotenv/config')
 const Paystack = require("./utils");
 
 // Subscribe to subscription
@@ -52,6 +53,7 @@ const subscribe = async (req, res) => {
       email: req.user.email,
       amount: parseInt(amount),
       reference: paidSub.id,
+      callback_url: process.env.PAYSTACK_CALLBACK
     };
     const paystack = new Paystack();
     const paymentResponse = await paystack.initialize(paymentParams);
