@@ -9,11 +9,7 @@ router.get(
   isAuthenticated,
   paidSubscriptionController.listPaidSubscriptions
 );
-router.get(
-  "/:subscriptionId",
-  isAuthenticated,
-  paidSubscriptionController.subscribe
-);
+router.post("/", isAuthenticated, paidSubscriptionController.subscribe);
 router.delete(
   "/:paidSubId",
   isAuthenticated,

@@ -6,7 +6,7 @@ const Paystack = require("./utils");
 // Subscribe to subscription
 const subscribe = async (req, res) => {
   try {
-    const subscription = await Subscription.findById(req.params.subscriptionId);
+    const subscription = await Subscription.findById(req.body.subscriptionId);
     const userPaidSubscriptions = await PaidSubscription.countDocuments({
       user: req.user.id,
     });
@@ -34,6 +34,7 @@ const subscribe = async (req, res) => {
         expiryDate.getDate() + subscription.durationInDays
       ),
       isFirstSubscription: isFirstSubscription,
+      renew: req.body.renew
     });
 
     if (!paidSub) {

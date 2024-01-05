@@ -18,7 +18,7 @@ const paidSubscriptionSchema = Schema({
     },
     isActive: {
         type: Boolean,
-        default: true
+        default: false
     },
     isExpired: {
         type: Boolean,
@@ -31,6 +31,10 @@ const paidSubscriptionSchema = Schema({
     isFirstSubscription: {
         type: Boolean,
         default: false
+    },
+    renew: {
+        type: Boolean,
+        default: true
     },
     dateAdded: {
         type: Date,
