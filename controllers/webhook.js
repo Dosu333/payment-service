@@ -1,4 +1,3 @@
-const { response } = require("express");
 const { PaidSubscription } = require("../models/paidSubscription");
 
 const webhook = async (req, res) => {
