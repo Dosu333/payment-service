@@ -1,3 +1,4 @@
+const { Card } = require("../models/card");
 const { PaidSubscription } = require("../models/paidSubscription");
 const { Subscription } = require("../models/subscription");
 require('dotenv/config')
@@ -44,17 +45,19 @@ const subscribe = async (req, res) => {
       });
     }
 
-    var amount = subscription.price;
+    var amount = subscription.price * 100;
 
     if (isFirstSubscription) {
-      amount = amount + amount * subscription.firstTimeUserDiscount;
+      amount = amount - (amount * (subscription.firstTimeUserDiscount/100));
     }
     paidSub.save();
     const paymentParams = {
       email: req.user.email,
       amount: parseInt(amount),
       reference: paidSub.id,
-      callback_url: process.env.PAYSTACK_CALLBACK
+      metadata: {
+        type: 'subscriptionPayment'
+      }
     };
     const paystack = new Paystack();
     const paymentResponse = await paystack.initialize(paymentParams);
@@ -68,6 +71,7 @@ const subscribe = async (req, res) => {
   }
 };
 
+// Delete subscription
 const deleteSubscription = async (req, res) => {
   try {
     await PaidSubscription.findByIdAndDelete(req.params.paidSubId);
@@ -81,6 +85,8 @@ const deleteSubscription = async (req, res) => {
   }
 };
 
+
+// List user's paid subscriptions
 const listPaidSubscriptions = async (req, res) => {
   try {
     var paidSubs
@@ -98,8 +104,51 @@ const listPaidSubscriptions = async (req, res) => {
     });
   }
 };
+
+
+// Renew subscription
+const renewSubscription = async (req, res) => {
+  try {
+    const paidSub = await PaidSubscription.findOne({
+      user: req.user.id,
+    }).sort()
+    const primaryCard = await Card.findOne({ user: req.user.id })
+    const subscription = await Subscription.findById(paidSub.subscription)
+
+    const newSub = await new PaidSubscription({
+      user: req.user.id,
+      subscription: subscription.id,
+      expiryDate: expiryDate.setDate(
+        expiryDate.getDate() + subscription.durationInDays
+      ),
+    })
+    newSub.save()
+    const paystack = new Paystack();
+    var amount = subscription.price * 100;
+    var paymentParams = {
+      email: req.user.email,
+      amount: parseInt(amount),
+      reference: newSub.id,
+      metadata: {
+        type: 'subscriptionPayment'
+      }
+    };
+    if (primaryCard) {
+      paymentParams.authorization_code = primaryCard.authCode
+    }
+    const paymentResponse = await paystack.initialize(paymentParams);
+    return res.status(201).send(paymentResponse);
+  } catch (error) {
+    console.error("Error creating payment:", error);
+    res.status(500).json({
+      success: false,
+      error: "Internal Server Error",
+    });
+  }
+} 
 module.exports = {
   subscribe,
   deleteSubscription,
   listPaidSubscriptions,
+  renewSubscription
 };
